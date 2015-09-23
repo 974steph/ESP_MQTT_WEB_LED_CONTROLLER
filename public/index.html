@@ -12,6 +12,10 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
     </style>
+
+  <link rel="Stylesheet" type="text/css" href="css/jpicker-1.1.6.min.css" />
+  <link rel="Stylesheet" type="text/css" href="jPicker.css" />
+
   </head>
     
   <body>  
@@ -33,14 +37,41 @@
     <lable for="ledW">WHITE</lable>
     <input type="checkbox" id="ledW"/>
 
+<div id="Inline"></div>
+
     <button>Send</button>
     </form>
 
-
       
     <script src="/socket.io/socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
+    <script src="jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script src="jpicker-1.1.6.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">        
+      $(document).ready(
+        function()
+        {
+          $('#Inline').jPicker({}
+            ,function(color,context){}    
+            ,function(color, context){
+                    var rgba=color.val('rgba');
+                    var obj={
+                          "clientId":$("#clientId").val(),
+                          "set_brightness":{
+                            "ledR": rgba.r,
+                            "ledB": rgba.b,
+                            "ledG": rgba.g,
+                          }
+                        };
+                    console.log(obj);
+
+                    socket.emit('cmd', JSON.stringify(obj));
+                    //{r: 242, g: 199, b: 26, a: 255}
+                    //var all = color.val('all');
+                    //alert('Color chosen - hex: ' + (all && '#' + all.hex || 'none') + ' - alpha: ' + (all && all.a + '%' || 'none'));
+                  });
+      });
+
       var socket = io();
 
       $('form').submit(function(){
